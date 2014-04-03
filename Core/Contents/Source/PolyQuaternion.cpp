@@ -248,3 +248,38 @@ Quaternion Quaternion::operator *(Quaternion q)
 
 	return r;
 }
+
+Vector3 Quaternion::getForwardVector() const
+{
+	Vector3 v = Vector3(0, 0, 1);
+	Vector3 uv, uuv;
+	Vector3 qvec = Vector3(x, y, z);
+	uv = qvec.crossProduct(v);
+	uuv = qvec.crossProduct(uv);
+	uv = uv * (2.0f * w);
+	uuv = uuv * 2.0f;
+
+	return v + uv + uuv;
+	/*return Vector3( 2 * (x * z + w * y), 
+                    2 * (y * x - w * x),
+                    1 - 2 * (x * x + y * y));*/
+}
+
+Quaternion Quaternion::fromTwoUnitVectors(Vector3 from, Vector3 to)
+{
+	Number dot = from.dot(to);
+	Vector3 cross;
+	if (1.f + dot < 1.e-6f){
+		cross = abs(from.x) > abs(from.z) ? Vector3(-from.y, from.x, 0.f)
+			: Vector3(0.f, -from.z, from.y);
+		Quaternion ret = Quaternion(0.f, cross.x, cross.y, cross.z);
+		ret.Normalize();
+		return ret;
+	}
+	else{
+		cross = from.crossProduct(to);
+	}
+	Quaternion ret = Quaternion(1.f + dot, cross.x, cross.y, cross.z);
+	ret.Normalize();
+	return ret;
+}

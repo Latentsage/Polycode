@@ -24,6 +24,7 @@ THE SOFTWARE.
 #include "PolyGlobals.h"
 #include "PolyMatrix4.h"
 #include "PolyVector3.h"
+#include <cstdlib>
 
 namespace Polycode {
 
@@ -99,6 +100,8 @@ namespace Polycode {
 			Quaternion operator+ (const Quaternion& rkQ) const;
 			Quaternion operator* (const Quaternion& rkQ) const;
 			Quaternion operator* (Number fScalar) const;
+			Vector3 getForwardVector() const;
+			static Quaternion fromTwoUnitVectors(Vector3 from, Vector3 to);
 
 			// TODO: implement
 			inline void lookAt(const Vector3 &D, const Vector3 &upVector) {
